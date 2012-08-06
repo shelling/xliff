@@ -1,22 +1,23 @@
 package XLIFF;
-use strict;
-use warnings;
 our $VERSION = '0.01';
+
+use Modern::Perl;
 
 1;
 __END__
 
 =head1 NAME
 
-XLIFF -
+XLIFF - XML Localisation Interchange File Format
 
 =head1 SYNOPSIS
 
-  use XLIFF;
+    use XLIFF;
 
 =head1 DESCRIPTION
 
-XLIFF is
+XLIFF is an XML-based format created to standardize localization.
+XLIFF was standardized by OASIS in 2002. Its current specification is v1.2.
 
 =head1 AUTHOR
 
