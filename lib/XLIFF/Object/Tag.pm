@@ -39,7 +39,8 @@ has content => (
 
 sub to_xml {
     my ($self, ) = @_;
-    XMLout({
+    return unless $self->content;
+    return XMLout({
         %{$self->attr},
         content => $self->content,
     }, RootName => $self->name);
@@ -60,6 +61,7 @@ sub from_xml {
 
 sub to_perl {
     my ($self, ) = @_;
+    return unless $self->content;
     return (
         $self->name => {
             content => $self->content,
