@@ -56,6 +56,17 @@ is (
     "from_xml() can set tag content",
 );
 
+is_deeply (
+    $from_xml->to_perl,
+    {
+        "target" => {
+            info    => "info",
+            content => "content",
+        }
+    },
+    "to_perl() can work",
+);
+
 my $from_perl = XLIFF::Object::Tag->from_perl(
     source => {
         "xml:lang" => "en",

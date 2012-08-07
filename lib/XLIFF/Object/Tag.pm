@@ -58,6 +58,16 @@ sub from_xml {
     );
 }
 
+sub to_perl {
+    my ($self, ) = @_;
+    return {
+        $self->name => {
+            content => $self->content,
+            %{$self->attr},
+        }
+    };
+}
+
 sub from_perl {
     my ($class, $name, $hash) = @_;
     $class->new(
