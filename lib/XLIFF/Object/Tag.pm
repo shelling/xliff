@@ -60,12 +60,12 @@ sub from_xml {
 
 sub to_perl {
     my ($self, ) = @_;
-    return {
+    return (
         $self->name => {
             content => $self->content,
             %{$self->attr},
         }
-    };
+    );
 }
 
 sub from_perl {

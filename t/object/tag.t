@@ -57,7 +57,7 @@ is (
 );
 
 is_deeply (
-    $from_xml->to_perl,
+    {$from_xml->to_perl},
     {
         "target" => {
             info    => "info",
