@@ -2,36 +2,38 @@ package XLIFF::Object::TransUnit;
 
 use Moose;
 
+use Modern::Perl;
 use XML::Simple;
+
+use XLIFF::Object::Tag;
 
 has id => (
     is  => "rw",
     isa => "Num",
 );
 
+# "source" should not have default value
+# to force user to provide it when initializing
 has source => (
     is       => "rw",
-    isa      => "HashRef",
+    isa      => "XLIFF::Object::Tag",
     required => 1,
-    default  => sub{
-        { content => undef }
-    },
 );
 
 has target => (
     is       => "rw",
-    isa      => "HashRef",
+    isa      => "XLIFF::Object::Tag",
     required => 0,
     default  => sub{
-        { content => undef }
+        XLIFF::Object::Tag->new(name => "target")
     },
 );
 
 has note => (
     is  => "rw",
-    isa => "HashRef",
+    isa => "XLIFF::Object::Tag",
     default => sub {
-        { content => undef }
+        XLIFF::Object::Tag->new(name => "note")
     },
 );
 
@@ -43,22 +45,28 @@ has approved => (
 
 sub from_xml {
     my ($class, $xml) = @_;
-    my $options = XMLin(
+
+    my $hash = XMLin(
         $xml,
         ForceContent => 1,
-        KeyAttr      => undef
-    );
-    $class->new(%$options);
+        KeepRoot     => 1,
+    )->{"trans-unit"};
+
+    die "not a <trans-unit></trans-unit> tag" unless $hash;
+
+    $hash->{$_} = XLIFF::Object::Tag->from_perl($_ => $hash->{$_}) for (qw(source target note));
+
+    $class->new(%$hash);
 }
 
 sub to_xml {
     my ($self, ) = @_;
     XMLout({
         id       => $self->id,
-        source   => $self->source,
-        target   => $self->target,
-        note     => $self->note,
         approved => $self->approved,
+        $self->source->to_perl,
+        $self->target->to_perl,
+        $self->note->to_perl,
     }, RootName => 'trans-unit' );
 }
 

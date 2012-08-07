@@ -26,25 +26,31 @@ is (
 );
 
 like (
-    $trans_unit->source->{content},
+    $trans_unit->source->content,
     qr{^Sorry we could},
     "source content ok",
 );
 
 like (
-    $trans_unit->target->{content},
+    $trans_unit->target->content,
     qr{^很抱歉},
     "target content ok",
 );
 
+like (
+    $trans_unit->note->content,
+    qr{^Original text},
+    "note content ok",
+);
+
 is (
-    $trans_unit->note->{annotates},
+    $trans_unit->note->get("annotates"),
     "source",
     "note annotates ok",
 );
 
 is (
-    $trans_unit->note->{from},
+    $trans_unit->note->get("from"),
     "developer",
     "note from ok",
 );
