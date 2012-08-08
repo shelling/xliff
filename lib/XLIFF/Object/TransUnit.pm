@@ -50,38 +50,44 @@ sub from_xml {
         $xml,
         ForceContent => 1,
         KeepRoot     => 1,
-    )->{"trans-unit"};
+        KeyAttr      => [],
+        ForceArray   => ['trans-unit'],
+    )->{"trans-unit"}->[0];
 
     die "not a <trans-unit></trans-unit> tag" unless $hash;
 
-    $class->from_perl($hash);
-}
-
-sub to_xml {
-    my ($self, ) = @_;
-    XMLout(
-        $self->to_perl,
-        RootName => 'trans-unit'
-    );
+    $class->from_perl( "trans-unit" => $hash );
 }
 
 sub from_perl {
-    my ($class, $hash) = @_;
+    my ($class, $name, $hash) = @_;
 
     $hash->{$_} = XLIFF::Object::Tag->from_perl($_ => $hash->{$_}) for (qw(source target note));
 
     $class->new(%$hash);
 }
 
+sub to_xml {
+    my ($self, ) = @_;
+    XMLout(
+        { $self->to_perl },
+        KeepRoot   => 1,
+        KeyAttr    => [],
+        ContentKey => 'content',
+    );
+}
+
 sub to_perl {
     my ($self, ) = @_;
-    return {
-        id       => $self->id,
-        approved => $self->approved,
-        $self->source->to_perl,
-        $self->target->to_perl,
-        $self->note->to_perl,
-    };
+    return (
+        "trans-unit" => {
+            id       => $self->id,
+            approved => $self->approved,
+            $self->source->to_perl,
+            $self->target->to_perl,
+            $self->note->to_perl,
+        }
+    );
 }
 
 __PACKAGE__->meta->make_immutable;

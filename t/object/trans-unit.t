@@ -4,12 +4,14 @@ use XLIFF::Object::TransUnit;
 use utf8;
 
 my $xml = q{
-<trans-unit id="12" approved="yes">
+<trans-unit approved="yes" id="12">
   <note annotates="source" from="developer">Original text was Sorry we couldn't find any results for &lt;strong&gt;[% google_sitesearch.Q %]&lt;/strong&gt;, please try again.</note>
   <source>Sorry we couldn't find any results for &lt;strong&gt;[% search_result_xml.Q %][% search_result_json.Query %]&lt;/strong&gt;, please try again.</source>
   <target>很抱歉，我們無法找到任何 &lt;strong&gt;[% search_result_xml.Q %][% search_result_json.Query %]&lt;/strong&gt; 的結果，請再試一次。</target>
 </trans-unit>
 };
+
+# tests for from_xml()
 
 my $trans_unit = XLIFF::Object::TransUnit->from_xml($xml);
 
@@ -59,6 +61,48 @@ is (
     "\n".$trans_unit->to_xml,
     $xml,
     "to_xml() ok",
+);
+
+# tests for from_perl()
+
+my $from_perl = XLIFF::Object::TransUnit->from_perl(
+    "trans-unit" => {
+        id       => 1,
+        approved => "yes",
+        note     => { content => "筆記" },
+        source   => { content => "hello" },
+        target   => { content => "哈囉" },
+    }
+);
+
+is (
+    $from_perl->id,
+    1,
+    "from_perl() can set id",
+);
+
+is (
+    $from_perl->approved,
+    "yes",
+    "from_perl() can set approved",
+);
+
+is (
+    $from_perl->source->content,
+    "hello",
+    "from_perl() can initialize source",
+);
+
+is (
+    $from_perl->target->content,
+    "哈囉",
+    "from_perl() can initialize target",
+);
+
+is (
+    $from_perl->note->content,
+    "筆記",
+    "from_perl() can initialize note",
 );
 
 done_testing;
