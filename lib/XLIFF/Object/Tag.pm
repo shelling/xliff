@@ -2,6 +2,8 @@ package XLIFF::Object::Tag;
 
 use Moose;
 
+with qw( XLIFF::Object );
+
 use XML::Simple;
 
 around BUILDARGS => sub {
@@ -40,12 +42,7 @@ has content => (
 sub to_xml {
     my ($self, ) = @_;
     return unless $self->content;
-    return XMLout(
-        { $self->to_perl },
-        KeepRoot   => 1,
-        KeyAttr    => [],
-        ContentKey => 'content',
-    );
+    xml_out({ $self->to_perl });
 }
 
 sub to_perl {
@@ -61,14 +58,7 @@ sub to_perl {
 
 sub from_xml {
     my ($class, $xml) = @_;
-    my ($name, $hash) = %{XMLin(
-        $xml,
-        ForceContent => 1,
-        KeepRoot     => 1,
-        KeyAttr      => [],
-        ForceArray   => ['trans-unit'],
-    )};
-    $class->from_perl($name, $hash);
+    $class->from_perl(%{ xml_in($xml) });
 }
 
 sub from_perl {

@@ -2,6 +2,8 @@ package XLIFF::Object::Body;
 
 use Moose;
 
+with qw( XLIFF::Object );
+
 use Modern::Perl;
 
 use XML::Simple;
@@ -25,23 +27,12 @@ has trans_unit => (
 
 sub to_xml {
     my ($self, ) = @_;
-    XMLout(
-        { $self->to_perl },
-        KeepRoot   => 1,
-        KeyAttr    => [],
-        ContentKey => 'content',
-    );
+    xml_out({ $self->to_perl });
 }
 
 sub from_xml {
     my ($class, $xml) = @_;
-    my $hash = XMLin(
-        $xml,
-        ForceContent => 1,
-        KeepRoot     => 1,
-        KeyAttr      => [],
-        ForceArray   => ['trans-unit'],
-    );
+    $class->from_perl(%{ xml_in($xml) });
 }
 
 sub to_perl {

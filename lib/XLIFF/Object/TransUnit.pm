@@ -2,6 +2,8 @@ package XLIFF::Object::TransUnit;
 
 use Moose;
 
+with qw( XLIFF::Object );
+
 use Modern::Perl;
 use XML::Simple;
 
@@ -46,13 +48,7 @@ has approved => (
 sub from_xml {
     my ($class, $xml) = @_;
 
-    my $hash = XMLin(
-        $xml,
-        ForceContent => 1,
-        KeepRoot     => 1,
-        KeyAttr      => [],
-        ForceArray   => ['trans-unit'],
-    )->{"trans-unit"}->[0];
+    my $hash = xml_in($xml)->{"trans-unit"}->[0];
 
     die "not a <trans-unit></trans-unit> tag" unless $hash;
 
@@ -69,12 +65,7 @@ sub from_perl {
 
 sub to_xml {
     my ($self, ) = @_;
-    XMLout(
-        { $self->to_perl },
-        KeepRoot   => 1,
-        KeyAttr    => [],
-        ContentKey => 'content',
-    );
+    xml_out({ $self->to_perl });
 }
 
 sub to_perl {

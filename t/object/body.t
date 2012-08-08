@@ -80,7 +80,7 @@ my $from_xml = XLIFF::Object::Body->from_xml(q{<body>
 </body>});
 
 is_deeply (
-    $from_xml,
+    { $from_xml->to_perl },
     {
         body => {
             "trans-unit" => [
