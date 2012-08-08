@@ -40,22 +40,11 @@ has content => (
 sub to_xml {
     my ($self, ) = @_;
     return unless $self->content;
-    return XMLout({
-        %{$self->attr},
-        content => $self->content,
-    }, RootName => $self->name);
-}
-
-sub from_xml {
-    my ($class, $xml) = @_;
-    my ($name, $hash) = %{XMLin(
-        $xml,
-        ForceContent => 1,
-        KeepRoot     => 1,
-    )};
-    $class->new(
-        name => $name,
-        %{$hash},
+    return XMLout(
+        { $self->to_perl },
+        KeepRoot   => 1,
+        KeyAttr    => [],
+        ContentKey => 'content',
     );
 }
 
@@ -68,6 +57,17 @@ sub to_perl {
             %{$self->attr},
         }
     );
+}
+
+sub from_xml {
+    my ($class, $xml) = @_;
+    my ($name, $hash) = %{XMLin(
+        $xml,
+        ForceContent => 1,
+        KeepRoot     => 1,
+        KeyAttr      => [],
+    )};
+    $class->from_perl($name, $hash);
 }
 
 sub from_perl {

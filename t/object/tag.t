@@ -35,7 +35,7 @@ is (
 );
 
 my $from_xml = XLIFF::Object::Tag->from_xml(
-    '<target info="info">content</target>'
+    '<target info="info" from="developer">content</target>'
 );
 
 is (
@@ -51,6 +51,12 @@ is (
 );
 
 is (
+    $from_xml->get("from"),
+    "developer",
+    "from_xml() can set more attr",
+);
+
+is (
     $from_xml->content,
     "content",
     "from_xml() can set tag content",
@@ -60,8 +66,9 @@ is_deeply (
     {$from_xml->to_perl},
     {
         "target" => {
-            info    => "info",
             content => "content",
+            info    => "info",
+            from    => "developer",
         }
     },
     "to_perl() can work",
