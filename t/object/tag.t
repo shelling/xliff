@@ -2,6 +2,8 @@ use Modern::Perl;
 use Test::More;
 use XLIFF::Object::Tag;
 
+# tests for constructor new()
+
 my $tag = XLIFF::Object::Tag->new(
     name       => "source",
     content    => "test content",
@@ -28,11 +30,15 @@ is (
     "can access content",
 );
 
+# tests for to_xml()
+
 is (
     $tag->to_xml,
     qq{<source info="zh" xml:lang="en">test content</source>\n},
     "to_xml() ok",
 );
+
+# tests for from_xml()
 
 my $from_xml = XLIFF::Object::Tag->from_xml(
     '<target info="info" from="developer">content</target>'
@@ -62,6 +68,8 @@ is (
     "from_xml() can set tag content",
 );
 
+# tests for to_perl()
+
 is_deeply (
     {$from_xml->to_perl},
     {
@@ -74,10 +82,12 @@ is_deeply (
     "to_perl() can work",
 );
 
+# tests for from_perl()
+
 my $from_perl = XLIFF::Object::Tag->from_perl(
     source => {
-        "xml:lang" => "en",
         "content"  => "source string",
+        "xml:lang" => "en",
     }
 );
 

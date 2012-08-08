@@ -66,6 +66,7 @@ sub from_xml {
         ForceContent => 1,
         KeepRoot     => 1,
         KeyAttr      => [],
+        ForceArray   => ['trans-unit'],
     )};
     $class->from_perl($name, $hash);
 }
