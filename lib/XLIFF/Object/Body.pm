@@ -13,6 +13,9 @@ use XLIFF::Object::TransUnit;
 has trans_unit => (
     is      => "rw",
     isa     => "ArrayRef[XLIFF::Object::TransUnit]",
+    default => sub {
+        []
+    },
     traits  => ['Array'],
     handles => {
         get     => "get",
@@ -23,6 +26,7 @@ has trans_unit => (
         shift   => "shift",
         unshift => "unshift",
         first   => "first",
+        count   => "count",
     },
 );
 
@@ -38,14 +42,13 @@ sub from_xml {
 
 sub to_perl {
     my ($self, ) = @_;
-    my %content = $self->map(sub { $_->to_perl });
-    # $_ is a XLIFF::Object::TransUnit
-    # its to_perl() return ( "trans-unit" => { ... } )
     return (
         body => {
             "trans-unit" => [
-                values(%content)
-            ]
+                $self->map(sub { pop [$_->to_perl] })
+            ],
+            # $_ is a XLIFF::Object::TransUnit
+            # its to_perl() return ( "trans-unit" => { ... } )
         }
     );
 }
@@ -66,12 +69,13 @@ sub from_perl {
 
 sub next_id {
     my ($self, ) = @_;
+    return 1 unless $self->count;
     $self->sort(
         sub {
             $_[0]->id cmp $_[1]->id
         }
     );
-    1+$self->get(-1)->id;
+    return 1+$self->get(-1)->id;
 }
 
 around push => sub {
