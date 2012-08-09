@@ -81,6 +81,16 @@ sub to_perl {
     );
 }
 
+sub from_kv {
+    my ($class, $source, $target) = @_;
+    $class->from_perl(
+        "trans-unit" => {
+            source => { content => $source },
+            target => { content => $target },
+        }
+    );
+}
+
 __PACKAGE__->meta->make_immutable;
 no Moose;
 

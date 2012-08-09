@@ -105,4 +105,19 @@ is (
     "from_perl() can initialize note",
 );
 
+my $from_kv = XLIFF::Object::TransUnit->from_kv("sky" => "天空");
+
+is_deeply (
+    { $from_kv->to_perl },
+    {
+        "trans-unit" => {
+            id       => undef,
+            approved => "no",
+            source   => { content => "sky" },
+            target   => { content => "天空" },
+        }
+    },
+    "from_kv() can work",
+);
+
 done_testing;
