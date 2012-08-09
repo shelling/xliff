@@ -15,8 +15,9 @@ has trans_unit => (
     isa     => "ArrayRef[XLIFF::Object::TransUnit]",
     traits  => ['Array'],
     handles => {
+        get     => "get",
         map     => "map",
-        sort    => "sort",
+        sort    => "sort_in_place",
         pop     => "pop",
         push    => "push",
         shift   => "shift",
@@ -62,6 +63,25 @@ sub from_perl {
 
     $self;
 }
+
+sub next_id {
+    my ($self, ) = @_;
+    $self->sort(
+        sub {
+            $_[0]->id cmp $_[1]->id
+        }
+    );
+    1+$self->get(-1)->id;
+}
+
+around push => sub {
+    my $orig = shift;
+    my $self = shift;
+
+    $_[0]->id($self->next_id) unless $_[0]->id;
+
+    $self->$orig(@_);
+};
 
 __PACKAGE__->meta->make_immutable;
 no Moose;

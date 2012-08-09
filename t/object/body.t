@@ -96,4 +96,42 @@ is_deeply (
     "from_xml() can work",
 );
 
+$from_xml->push(
+    XLIFF::Object::TransUnit->from_perl(
+        "trans-unit" => {
+            id       => 2,
+            approved => "no",
+            source   => { content => "asssail" },
+            target   => { content => "襲擊" },
+        }
+    )
+);
+
+is (
+    $from_xml->next_id,
+    4,
+    "can get next id for trans-unit",
+);
+
+is (
+    $from_xml->get(-1)->id,
+    3,
+    "next_id() should sort trans-unit with id",
+);
+
+$from_xml->push(
+    XLIFF::Object::TransUnit->from_perl(
+        "trans-unit" => {
+            source => { content => "asseverate" },
+            target => { content => "斷言" },
+        }
+    )
+);
+
+is (
+    $from_xml->get(-1)->id,
+    4,
+    "push() can give next id",
+);
+
 done_testing;
