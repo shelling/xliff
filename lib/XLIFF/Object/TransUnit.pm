@@ -91,6 +91,14 @@ sub from_kv {
     );
 }
 
+sub to_kv {
+    my ($self, $name) = @_;
+    return (
+        $self->source->content,
+        $self->target->content,
+    );
+}
+
 __PACKAGE__->meta->make_immutable;
 no Moose;
 

@@ -120,4 +120,13 @@ is_deeply (
     "from_kv() can work",
 );
 
+is_deeply (
+    [ $from_kv->to_kv ],
+    [
+        "sky",
+        "天空",
+    ],
+    "to_kv() can work",
+);
+
 done_testing;
