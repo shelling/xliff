@@ -72,7 +72,7 @@ sub next_id {
     return 1 unless $self->count;
     $self->sort(
         sub {
-            $_[0]->id cmp $_[1]->id
+            $_[0]->id <=> $_[1]->id
         }
     );
     return 1+$self->get(-1)->id;
