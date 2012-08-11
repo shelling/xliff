@@ -2,6 +2,9 @@ package XLIFF::Object::Header;
 
 use Moose;
 
+extends qw( XLIFF::Object );
+with qw( XLIFF::Module );
+
 sub to_perl {
     my ($self, ) = @_;
     return (

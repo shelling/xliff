@@ -2,7 +2,8 @@ package XLIFF::Object::Tag;
 
 use Moose;
 
-with qw( XLIFF::Object );
+extends qw( XLIFF::Object );
+with qw( XLIFF::Module );
 
 use XML::Simple;
 
